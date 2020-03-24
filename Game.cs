@@ -22,6 +22,7 @@ namespace ZooTycoon
         {
             Console.WriteLine("Welcome to Zoo Tycoon!");
             InitializePlayer();
+            HoldScreen();
             Console.WriteLine("\nTo begin, you will purchase at least one baby animal from the following menu.");
             HoldScreen();
             bool keepPurchasing;
@@ -36,24 +37,25 @@ namespace ZooTycoon
         }
         public bool PurchaseBabies()
         {
-
             PurchaseAnimalOptions selection = (PurchaseAnimalOptions)_purchaseMenu.GetUserSelection(_player) - 1;
             if (selection == PurchaseAnimalOptions.Return)
                 return false;
             else
             {
-                PurchaseAnimal(selection);
+                PurchaseAnimal(selection, 1);
                 return true;
             }
         }
-        private void PurchaseAnimal(PurchaseAnimalOptions animal)
+        private void PurchaseAnimal(PurchaseAnimalOptions animal, int age)
         {
-            string animalString = "ZooTycoon"+ "." + Enum.GetName(typeof(PurchaseAnimalOptions), animal);
-            System.Runtime.Remoting.ObjectHandle oh = Activator.CreateInstance("ZooTycoon", animalString);
+            //See: https://docs.microsoft.com/en-us/dotnet/api/system.activator?redirectedfrom=MSDN&view=netframework-4.8
+            string animalString = "ZooTycoon" + "." + Enum.GetName(typeof(PurchaseAnimalOptions), animal);
+            object[] arguments = new object[2]{ age, _baseCost };
+            System.Runtime.Remoting.ObjectHandle oh = Activator.CreateInstance("ZooTycoon", animalString, false, 0, null, arguments, null, null);
             IAnimal newAnimal = (IAnimal)oh.Unwrap();
 
             _zoo.Add(newAnimal);
-            _player.ChangeCash(-newAnimal.PurchaseCost());
+            _player.ChangeCash(-newAnimal.PurchaseCost(), true);
         }
         public void HoldScreen()
         {

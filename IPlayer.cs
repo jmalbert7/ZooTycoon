@@ -4,7 +4,7 @@
     {
         string DisplayName();
         void DisplayCash();
-        void ChangeCash(double delta);
+        void ChangeCash(double delta, bool optional);
         bool IsBankrupt();
 
     }

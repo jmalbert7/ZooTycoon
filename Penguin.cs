@@ -15,6 +15,13 @@
             _maintenanceCost = 25;
             _profit = 0.1 * _purchaseCost;
         }
+        public Penguin(int age, double baseCost)
+        {
+            _age = age;
+            _numberOfBabies = 5;
+            _maintenanceCost = baseCost;
+            _profit = 0.1 * _purchaseCost;
+        }
 
 
         public int GetAge()

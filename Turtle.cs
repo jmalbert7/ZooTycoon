@@ -15,6 +15,13 @@
             _maintenanceCost = 10;
             _profit = 0.05 * _purchaseCost;
         }
+        public Turtle(int age, double baseCost)
+        {
+            _age = age;
+            _numberOfBabies = 10;
+            _maintenanceCost = 0.5 * baseCost;
+            _profit = 0.05 * _purchaseCost;
+        }
 
         public int GetAge()
         {

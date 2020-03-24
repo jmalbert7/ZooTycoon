@@ -15,16 +15,29 @@ namespace ZooTycoon
             Bankrupt = false;
         }
 
-        private bool SetCash(double delta)
+        private bool SetCash(double delta, bool optional)
         {
             double tempCash = _cash;
-            if ((tempCash += delta) > 0)
+            if ((tempCash += delta) >= 0 && optional)
+            {
+                _cash += delta;
+                return true;
+            }
+            else if((tempCash += delta) < 0 && optional)
+            {
+                Console.WriteLine("You don't have enough money to do this operation.");
+                return true;
+            }
+            else if((tempCash += delta) >= 0 && !optional)
             {
                 _cash += delta;
                 return true;
             }
             else
+            {
+                _cash += delta;
                 return false;
+            }
         }
         private double GetCash()
         {
@@ -34,9 +47,9 @@ namespace ZooTycoon
         {
             Console.WriteLine("Money in the Bank: {0:C}", GetCash());
         }
-        public void ChangeCash(double delta)
+        public void ChangeCash(double delta, bool option)
         {
-            if (SetCash(delta))
+            if (SetCash(delta, option))
                 DisplayCash();
             else
             {

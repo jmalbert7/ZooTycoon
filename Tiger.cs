@@ -15,6 +15,13 @@
             _maintenanceCost = 50;         
             _profit = 0.2 * _purchaseCost;
         }
+        public Tiger(int age, double baseCost)
+        {
+            _age = age;
+            _numberOfBabies = 1;
+            _maintenanceCost = 5 * baseCost;
+            _profit = 0.2 * _purchaseCost;
+        }
 
         public int GetAge()
         {
