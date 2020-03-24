@@ -28,7 +28,7 @@ namespace ZooTycoon
             Console.WriteLine("2. Quit");
         }
 
-        public int GetUserSelection()
+        public int GetUserSelection(IPlayer player)
         {
             DisplayName();
             ValidateStringToInt selection = new ValidateStringToInt("");

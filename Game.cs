@@ -20,7 +20,16 @@ namespace ZooTycoon
         {
             Console.WriteLine("Welcome to Zoo Tycoon!");
             InitializePlayer();
+            Console.Write("Starting funds: "); _player.DisplayCash();
+            PurchaseBabies();
             HoldScreen();
+        }
+        public void PurchaseBabies()
+        {
+            Console.WriteLine("\nTo begin, you will purchase at least one baby animal from the following menu.");
+            HoldScreen();
+            Console.WriteLine("purchase babies selection" +_purchaseMenu.GetUserSelection(_player));
+
         }
         public void HoldScreen()
         {
@@ -42,14 +51,11 @@ namespace ZooTycoon
 
         public bool RunGame()
         {
-            int option = _gameMenu.GetUserSelection() - 1;
+            int option = _gameMenu.GetUserSelection(_player) - 1;
             bool play = true;
             if ((int)GameMenuOptions.PlayAgain == option)
             {
-                _player.DisplayCash();
-                _player.ChangeCash(-500.00);
-                Console.WriteLine(_purchaseMenu.GetUserSelection()); 
-                HoldScreen();
+                Console.WriteLine("In main game loop");
                 //play game
             }
             else

@@ -2,7 +2,7 @@
 {
     public interface IMenu
     {
-        int GetUserSelection();
+        int GetUserSelection(IPlayer player);
         void DisplayOptions();
         
     }

@@ -1,19 +1,19 @@
 ﻿namespace ZooTycoon
 {
-    public class Tiger : IAnimal
+    public class Turtle : IAnimal
     {
         private int _age;
         private int _numberOfBabies;
         private readonly double _maintenanceCost;
         private readonly double _profit;
-        private static readonly double _purchaseCost = 10000;
+        private static readonly double _purchaseCost = 100;
 
-        public Tiger(double baseCost)
+        public Turtle(double baseCost)
         {
             _age = 1;
-            _numberOfBabies = 1;
-            _maintenanceCost = 5 * baseCost;         
-            _profit = 0.2 * _purchaseCost;
+            _numberOfBabies = 10;
+            _maintenanceCost = 0.5 * baseCost;
+            _profit = 0.05 * _purchaseCost;
         }
 
         public int GetAge()

@@ -18,15 +18,16 @@ namespace ZooTycoon
         }
         public void DisplayOptions()
         {
-            Console.WriteLine("1. Buy a Tiger {0:C}", Tiger.GetPurchaseCost());
-            Console.WriteLine("2. Buy a Penguin");
-            Console.WriteLine("3. Buy a Turtle");
+            Console.WriteLine("1. Buy a Tiger for {0:C}", Tiger.GetPurchaseCost());
+            Console.WriteLine("2. Buy a Penguin for {0:C}", Penguin.GetPurchaseCost());
+            Console.WriteLine("3. Buy a Turtle for {0:C}", Turtle.GetPurchaseCost());
             Console.WriteLine("4. Nevermind");
         }
 
-        public int GetUserSelection()
+        public int GetUserSelection(IPlayer player)
         {
             DisplayName();
+            player.DisplayCash();
             ValidateStringToInt selection = new ValidateStringToInt("");
             bool isValid;
             do
