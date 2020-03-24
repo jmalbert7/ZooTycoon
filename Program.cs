@@ -9,6 +9,18 @@ namespace ZooTycoon
         void DisplayEventNameAndDescription();
         void RunEvent();
     }
+    public class Sickness : IEvent
+    {
+        public void DisplayEventNameAndDescription()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void RunEvent()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 
     class Program
     {

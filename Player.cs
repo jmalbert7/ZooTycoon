@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ZooTycoon
 {
@@ -66,6 +67,12 @@ namespace ZooTycoon
         public bool IsBankrupt()
         {
             return Bankrupt;
+        }
+        public void PayMaintenanceCosts(IZoo zoo)
+        {
+            double cost = zoo.GetSumMaintenanceCosts();
+            ChangeCash(-cost, false);
+            Console.WriteLine("Mantenance costs deducted from you account: {0:C}", cost);
         }
 
     }

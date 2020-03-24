@@ -9,6 +9,7 @@
         int GetNumberOfBabies();
         void increaseAge();
         void removeAnimal();
+        string Type();
 
     }
 }

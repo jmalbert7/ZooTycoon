@@ -1,4 +1,6 @@
-﻿namespace ZooTycoon
+﻿using System.Collections.Generic;
+
+namespace ZooTycoon
 {
     public interface IPlayer
     {
@@ -6,6 +8,7 @@
         void DisplayCash();
         void ChangeCash(double delta, bool optional);
         bool IsBankrupt();
+        void PayMaintenanceCosts(IZoo zoo);
 
     }
 }
