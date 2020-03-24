@@ -7,6 +7,8 @@
         private readonly double _maintenanceCost;
         private readonly double _profit;
         private static readonly double _purchaseCost = 100;
+        private static readonly string _type = "Turtle";
+
 
         public Turtle()
         {
@@ -14,15 +16,19 @@
             _numberOfBabies = 10;
             _maintenanceCost = 10;
             _profit = 0.05 * _purchaseCost;
+            
         }
         public Turtle(int age, double baseCost)
+            :this()
         {
             _age = age;
-            _numberOfBabies = 10;
             _maintenanceCost = 0.5 * baseCost;
-            _profit = 0.05 * _purchaseCost;
         }
 
+        public string Type()
+        {
+            return _type;
+        }
         public int GetAge()
         {
             return _age;

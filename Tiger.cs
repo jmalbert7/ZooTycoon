@@ -7,6 +7,8 @@
         private readonly double _maintenanceCost;
         private readonly double _profit;
         private static readonly double _purchaseCost = 10000;
+        private static readonly string _type = "Tiger";
+
 
         public Tiger()
         {
@@ -16,13 +18,17 @@
             _profit = 0.2 * _purchaseCost;
         }
         public Tiger(int age, double baseCost)
+            :this()
         {
             _age = age;
-            _numberOfBabies = 1;
             _maintenanceCost = 5 * baseCost;
-            _profit = 0.2 * _purchaseCost;
+
         }
 
+        public string Type()
+        {
+            return _type;
+        }
         public int GetAge()
         {
             return _age;
