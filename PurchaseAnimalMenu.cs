@@ -21,7 +21,7 @@ namespace ZooTycoon
             Console.WriteLine("1. Buy a Tiger for {0:C}", Tiger.GetPurchaseCost());
             Console.WriteLine("2. Buy a Penguin for {0:C}", Penguin.GetPurchaseCost());
             Console.WriteLine("3. Buy a Turtle for {0:C}", Turtle.GetPurchaseCost());
-            Console.WriteLine("4. Nevermind");
+            Console.WriteLine("4. Return");
         }
 
         public int GetUserSelection(IPlayer player)

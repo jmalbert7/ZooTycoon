@@ -8,28 +8,52 @@ namespace ZooTycoon
         private IPlayer _player;
         private readonly double _baseCost;
         private readonly IMenu _purchaseMenu;
+        private readonly IZoo _zoo;
 
         public Game()
         {
             _gameMenu = new GameMenu();
             _purchaseMenu = new PurchaseAnimalMenu();
             _baseCost = 50;
+            _zoo = new Zoo();
         }
 
         public void StartGame()
         {
             Console.WriteLine("Welcome to Zoo Tycoon!");
             InitializePlayer();
-            Console.Write("Starting funds: "); _player.DisplayCash();
-            PurchaseBabies();
-            HoldScreen();
-        }
-        public void PurchaseBabies()
-        {
             Console.WriteLine("\nTo begin, you will purchase at least one baby animal from the following menu.");
             HoldScreen();
-            Console.WriteLine("purchase babies selection" +_purchaseMenu.GetUserSelection(_player));
+            bool keepPurchasing;
+            do
+            {
+                keepPurchasing = PurchaseBabies();
+            } while (keepPurchasing == true || _zoo.GetCount() < 1);
 
+            Console.Clear();
+            Console.WriteLine("Total animals at {0}'s Zoo: {1}",_player.DisplayName(),_zoo.GetCount());
+            HoldScreen();
+        }
+        public bool PurchaseBabies()
+        {
+
+            PurchaseAnimalOptions selection = (PurchaseAnimalOptions)_purchaseMenu.GetUserSelection(_player) - 1;
+            if (selection == PurchaseAnimalOptions.Return)
+                return false;
+            else
+            {
+                PurchaseAnimal(selection);
+                return true;
+            }
+        }
+        private void PurchaseAnimal(PurchaseAnimalOptions animal)
+        {
+            string animalString = "ZooTycoon"+ "." + Enum.GetName(typeof(PurchaseAnimalOptions), animal);
+            System.Runtime.Remoting.ObjectHandle oh = Activator.CreateInstance("ZooTycoon", animalString);
+            IAnimal newAnimal = (IAnimal)oh.Unwrap();
+
+            _zoo.Add(newAnimal);
+            _player.ChangeCash(-newAnimal.PurchaseCost());
         }
         public void HoldScreen()
         {

@@ -2,7 +2,7 @@
 {
     public interface IAnimal
     {
-        //double GetPurchaseCost();
+        double PurchaseCost();
         double GetMaintenanceCost();
         double GetProfit();
         int GetAge();

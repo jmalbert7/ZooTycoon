@@ -8,11 +8,11 @@
         private readonly double _profit;
         private static readonly double _purchaseCost = 10000;
 
-        public Tiger(double baseCost)
+        public Tiger()
         {
             _age = 1;
             _numberOfBabies = 1;
-            _maintenanceCost = 5 * baseCost;         
+            _maintenanceCost = 50;         
             _profit = 0.2 * _purchaseCost;
         }
 
@@ -44,6 +44,11 @@
         public void increaseAge()
         {
             _age++;
+        }
+
+        public double PurchaseCost()
+        {
+            return _purchaseCost;
         }
 
         public void removeAnimal()
