@@ -16,10 +16,17 @@ namespace ZooTycoon
             ZooList.Add(newAnimal);
         }
 
-        public void Remove()
+        public string Remove()
         {
-            int index = RandomIndex();
-            ZooList.RemoveAt(index);
+            if (GetCount() > 0)
+            {
+                int index = RandomIndex();
+                string type = ZooList[index].Type();
+                ZooList.RemoveAt(index);
+                return type;
+            }
+            else
+                return "";
         }
         public int GetCount()
         {
@@ -56,6 +63,17 @@ namespace ZooTycoon
                 sum = ZooList.Sum(p => p.GetMaintenanceCost());
             }
             return sum;
+        }
+        public int GetTigerCount()
+        {
+            return ZooList.Where(p => p.Type() == "Tiger").Count();
+        }
+        public bool ValidBirth(int index)
+        {
+            if (ZooList[index].GetAge() > 3)
+                return true;
+            else
+                return false;
         }
     }
 }
