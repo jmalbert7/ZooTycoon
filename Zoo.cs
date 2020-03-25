@@ -28,6 +28,10 @@ namespace ZooTycoon
             else
                 return "";
         }
+        public void RemoveAtIndex(int index)
+        {
+            ZooList.RemoveAt(index);
+        }
         public int GetCount()
         {
             return ZooList.Count;
@@ -74,6 +78,14 @@ namespace ZooTycoon
                 return true;
             else
                 return false;
+        }
+        public string GetTypeAtIndex(int index)
+        {
+            return ZooList[index].Type();
+        }
+        public int GetBabiesAtIndex(int index)
+        {
+            return ZooList[index].GetBabies();
         }
     }
 }
