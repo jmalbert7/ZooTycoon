@@ -6,9 +6,14 @@ namespace ZooTycoon
     {
         string DisplayName();
         void DisplayCash();
-        void ChangeCash(double delta, bool optional);
+        bool ChangeCash(double delta, bool optional);
         bool IsBankrupt();
         void PayMaintenanceCosts(IZoo zoo);
+        void AddBonus(double bonus);
+        void AddExpense(double expense);
+        double GetProfit();
+        void ClearEndOfDay();
+        void DisplayEndOfDaySummary();
 
     }
 }
