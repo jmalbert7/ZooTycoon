@@ -9,18 +9,16 @@ namespace ZooTycoon
         private IPlayer _player;
         private readonly double _baseCost;
         private readonly IMenu _purchaseMenu;
+        private readonly IMenu _endOfDayMenu;
         private readonly IZoo _zoo;
-        private List<string> _events;
-        private double _bonus;
 
         public Game()
         {
             _gameMenu = new GameMenu();
             _purchaseMenu = new PurchaseAnimalMenu();
+            _endOfDayMenu = new EndOfDayMenu();
             _baseCost = 50;
             _zoo = new Zoo();
-            _events = new List<string>();
-            _bonus = 0;
         }
 
         public void StartGame()
@@ -33,7 +31,7 @@ namespace ZooTycoon
             bool keepPurchasing;
             do
             {
-                keepPurchasing = PurchaseBabies();
+                keepPurchasing = ChooseAnimal(1);
             } while (keepPurchasing == true || _zoo.GetCount() < 1);
 
             Console.Clear();
@@ -41,21 +39,21 @@ namespace ZooTycoon
             _zoo.DisplayZooComposition();
             HoldScreen();
         }
-        private bool PurchaseBabies()
+        private bool ChooseAnimal(int age)
         {
             PurchaseAnimalOptions selection = (PurchaseAnimalOptions)_purchaseMenu.GetUserSelection(_player) - 1;
             if (selection == PurchaseAnimalOptions.Return)
                 return false;
             else
             {
-                PurchaseAnimal(selection, 1);
+                PurchaseAnimal(selection, age);
                 return true;
             }
         }
         private IAnimal CreateAnimal(PurchaseAnimalOptions animal, int age)
         {
             //See: https://docs.microsoft.com/en-us/dotnet/api/system.activator?redirectedfrom=MSDN&view=netframework-4.8
-            string animalString = "ZooTycoon" + "." + Enum.GetName(typeof(PurchaseAnimalOptions), animal);
+            string animalString = "ZooTycoon" + "." + animal.ToString();
             object[] arguments = new object[2] { age, _baseCost };
             System.Runtime.Remoting.ObjectHandle oh = Activator.CreateInstance("ZooTycoon", animalString, false, 0, null, arguments, null, null);
             IAnimal newAnimal = (IAnimal)oh.Unwrap();
@@ -66,7 +64,13 @@ namespace ZooTycoon
         private void PurchaseAnimal(PurchaseAnimalOptions animal, int age)
         {
             IAnimal newAnimal = CreateAnimal(animal, age);
-            _player.ChangeCash(-newAnimal.PurchaseCost(), true);
+            bool purchaseOk = _player.ChangeCash(-newAnimal.PurchaseCost(), true);
+            if (!purchaseOk)
+            {
+                Console.WriteLine("You don't have enough money to purchase this animal");
+                _zoo.RemoveAtIndex(_zoo.GetCount() - 1);
+                HoldScreen();
+            }
         }
         public void HoldScreen()
         {
@@ -87,39 +91,44 @@ namespace ZooTycoon
         }
         private void RandomEvent()
         {
-            //Random random = new Random();
-            //var numberOfEvents = Enum.GetNames(typeof(Events)).Length;
-            //var randomEvent = random.Next(0, numberOfEvents);
-            //switch ((Events)randomEvent)
-            //{
-            //    case Events.Sickness:
-            //        Sickness();
-            //        break;
-            //    case Events.AttendanceBoom:
-            //        AttendanceBoom();
-            //        break;
-            //    case Events.Birth:
-            //        Birth();
-            //        break;
-            //    default:
-            //        break;
-            //}
-            Birth();
+            Random random = new Random();
+            var numberOfEvents = Enum.GetNames(typeof(Events)).Length;
+            var randomEvent = random.Next(0, numberOfEvents);
+            switch ((Events)randomEvent)
+            {
+                case Events.Sickness:
+                    Sickness();
+                    break;
+                case Events.AttendanceBoom:
+                    AttendanceBoom();
+                    break;
+                case Events.Birth:
+                    Birth();
+                    break;
+                default:
+                    break;
+            }
+
         }
         private void Birth()
         {
             Random random = new Random();
             var numberOfAnimals = _zoo.GetCount();
-            Console.WriteLine("number of animals before {0}", numberOfAnimals);
             var randomAnimal = random.Next(0, numberOfAnimals - 1);
-            Console.WriteLine("random animal: {0}", randomAnimal);
             if (_zoo.ValidBirth(randomAnimal))
             {
-                IAnimal newAnimal = CreateAnimal((PurchaseAnimalOptions)randomAnimal, 1);
-                //_zoo.Add(newAnimal);
-                Console.WriteLine("Congrats! A new {0} has been born!", newAnimal.Type());
+                int babies = _zoo.GetBabiesAtIndex(randomAnimal);
+                IAnimal newAnimal = null; ;
+                for (int i = 0; i < babies; i++)
+                {
+                    newAnimal = CreateAnimal((PurchaseAnimalOptions)Enum.Parse(typeof(PurchaseAnimalOptions), _zoo.GetTypeAtIndex(randomAnimal)), 1);
+                }
+                if(babies > 1)
+                    Console.WriteLine("Congrats! {0} new {1}s have been born!", babies, _zoo.GetTypeAtIndex(randomAnimal));
+                else
+                    Console.WriteLine("Congrats! A new {0} has been born!", _zoo.GetTypeAtIndex(randomAnimal));
+
             }
-            Console.WriteLine("number of animals after {0}", _zoo.GetCount());
         }
         private void AttendanceBoom()
         {
@@ -129,7 +138,7 @@ namespace ZooTycoon
             Console.WriteLine("Tiger count: {0}, value: {1}, bonus: {2}", _zoo.GetTigerCount(), val, bonus);
             _player.ChangeCash(bonus, false);
             Console.WriteLine("Congrats! A boom in attendance has generated a {0:C} bonus for each Tiger in your zoo! Total bonus is {1:C}", val, bonus);
-            _bonus = bonus;
+            _player.AddBonus(bonus);
         }
         private void Sickness()
         {
@@ -139,26 +148,69 @@ namespace ZooTycoon
         }
         public bool RunGame()
         {
-            int option = _gameMenu.GetUserSelection(_player) - 1;
+            int startOption = _gameMenu.GetUserSelection(_player) - 1;
             bool play = true;
-            if ((int)GameMenuOptions.PlayAgain == option)
+            int endOption;
+            bool done = false;
+            if ((int)GameMenuOptions.PlayAgain == startOption)
             {
                 //play game
                 Console.Clear();
-                _bonus = 0;
                 _zoo.IncreaseAgeAllAnimals();
                 _player.PayMaintenanceCosts(_zoo);
                 RandomEvent();
                 HoldScreen();
+                do
+                {
+                    endOption = _endOfDayMenu.GetUserSelection(_player) - 1;
+                    switch ((EndOfDay)endOption)
+                    {
+                        case EndOfDay.ViewZooSummary:
+                            _zoo.DisplayZooComposition();
+                            HoldScreen();
+                            break;
+                        case EndOfDay.PurchaseAdultAnimal:
+                            ChooseAnimal(3);
+                            HoldScreen();
+                            break;
+                        case EndOfDay.ViewMoney:
+                            _player.DisplayCash();
+                            HoldScreen();
+                            break;
+                        case EndOfDay.ViewDaySummary:
+                            _player.DisplayEndOfDaySummary();
+                            HoldScreen();
+                            break;
+                        case EndOfDay.Return:
+                            done = true;
+                            break;
+                        default:
+                            break;
+                    }
+                } while (done == false);
+
+                _player.ClearEndOfDay();
             }
             else
                 play = false;            
             
 
-            if (play == true && _player.IsBankrupt() == false)
-                return true;
+            if (play == false)                
+                return false;
+            else if (play == true && _player.IsBankrupt() == true)
+            {
+                Console.Clear();
+                Console.WriteLine("You went bankrupt. \n GAME OVER :(:(:(");
+                return false;
+            }
+            else if(play == true && _zoo.GetCount() <= 0)
+            {
+                Console.Clear();
+                Console.WriteLine("No more animals left in your zoo. \n GAME OVER :(:(:(");
+                return false;
+            }
             else
-                return false; 
+                return true;
         }
     }
 }
