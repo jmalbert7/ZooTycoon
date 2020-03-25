@@ -4,6 +4,8 @@
     {
         ViewZooSummary,
         PurchaseAdultAnimal,
-        ViewMoney
+        ViewMoney,
+        ViewDaySummary,
+        Return
     }
 }
