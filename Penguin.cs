@@ -17,10 +17,11 @@
             _profit = 0.1 * _purchaseCost;
         }
         public Penguin(int age, double baseCost)
-            :this()
         {
             _age = age;
             _maintenanceCost = baseCost;
+            _numberOfBabies = 5;
+            _profit = 0.1 * _purchaseCost;
         }
 
         public string Type()
@@ -65,6 +66,10 @@
         public void removeAnimal()
         {
             throw new System.NotImplementedException();
+        }
+        public int GetBabies()
+        {
+            return _numberOfBabies;
         }
     }
 }

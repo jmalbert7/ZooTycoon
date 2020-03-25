@@ -11,5 +11,6 @@
         void removeAnimal();
         string Type();
 
+        int GetBabies();
     }
 }

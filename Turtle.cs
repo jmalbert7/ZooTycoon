@@ -19,10 +19,11 @@
             
         }
         public Turtle(int age, double baseCost)
-            :this()
         {
             _age = age;
             _maintenanceCost = 0.5 * baseCost;
+            _numberOfBabies = 10;
+            _profit = 0.05 * _purchaseCost;
         }
 
         public string Type()
@@ -67,6 +68,10 @@
         public void removeAnimal()
         {
             throw new System.NotImplementedException();
+        }
+        public int GetBabies()
+        {
+            return _numberOfBabies;
         }
     }
 }
